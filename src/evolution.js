@@ -1,5 +1,7 @@
 // Integração com a Evolution API v2: leitura do webhook e envio de mensagens.
 
+import { normalizeNumber } from "./config.js";
+
 /**
  * Extrai uma mensagem de texto recebida de um payload de webhook "messages.upsert".
  * Retorna null para qualquer coisa que o bot deve ignorar.
@@ -21,7 +23,7 @@ export function parseIncoming(payload) {
     .filter(Boolean)
     .map(String)
     .filter((jid) => jid.endsWith("@s.whatsapp.net") || /^\d+$/.test(jid))
-    .map((jid) => jid.split("@")[0].replace(/\D/g, ""));
+    .map((jid) => normalizeNumber(jid.split("@")[0]));
 
   const msg = data.message ?? {};
   const text =

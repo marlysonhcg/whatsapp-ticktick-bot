@@ -8,6 +8,19 @@ function required(name) {
   return value;
 }
 
+/**
+ * Normaliza um número para só dígitos. Celulares brasileiros chegam do WhatsApp
+ * às vezes sem o 9 (55 + DDD + 8 dígitos); aqui eles ganham o 9 de volta, para
+ * que "5585987654321" e "558587654321" sejam tratados como o mesmo número.
+ */
+export function normalizeNumber(value) {
+  const digits = String(value ?? "").replace(/\D/g, "");
+  if (/^55\d{2}[6-9]\d{7}$/.test(digits)) {
+    return `${digits.slice(0, 4)}9${digits.slice(4)}`;
+  }
+  return digits;
+}
+
 function optional(name, fallback) {
   const value = process.env[name]?.trim();
   return value ? value : fallback;
@@ -16,7 +29,7 @@ function optional(name, fallback) {
 export function loadConfig() {
   const allowed = required("ALLOWED_NUMBERS")
     .split(",")
-    .map((n) => n.replace(/\D/g, ""))
+    .map(normalizeNumber)
     .filter(Boolean);
   if (allowed.length === 0) {
     throw new Error("ALLOWED_NUMBERS precisa ter pelo menos um número (só dígitos, com DDI e DDD).");
