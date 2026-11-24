@@ -260,6 +260,9 @@ export function friendlyError(error) {
   if (error instanceof Anthropic.RateLimitError) {
     return "⚠️ Muitas mensagens em pouco tempo. Espere um minuto e tente de novo.";
   }
+  if (error instanceof Anthropic.BadRequestError && /credit balance/i.test(error.message)) {
+    return "⚠️ Acabaram os créditos da API da Anthropic. Adicione créditos em console.anthropic.com → Plans & Billing e tente de novo.";
+  }
   if (error instanceof Anthropic.BadRequestError && /mcp|ticktick|auth|token|401/i.test(error.message)) {
     return "⚠️ Não consegui acessar o TickTick. O token pode ter expirado: rode `npm run ticktick-login` e atualize o TICKTICK_TOKEN no servidor.";
   }
