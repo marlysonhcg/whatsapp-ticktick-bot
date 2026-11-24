@@ -26,6 +26,23 @@ function optional(name, fallback) {
   return value ? value : fallback;
 }
 
+function parseTime(value) {
+  if (!value) return null;
+  const m = /^(\d{1,2}):(\d{2})$/.exec(value);
+  if (!m || Number(m[1]) > 23 || Number(m[2]) > 59) {
+    throw new Error(`DAILY_SUMMARY_TIME inválido: "${value}" (use HH:MM, ex.: 07:00)`);
+  }
+  return { hour: Number(m[1]), minute: Number(m[2]), label: `${m[1].padStart(2, "0")}:${m[2]}` };
+}
+
+function parseDays(value) {
+  const days = value.split(",").map((d) => Number(d.trim()));
+  if (days.length === 0 || days.some((d) => !Number.isInteger(d) || d < 0 || d > 6)) {
+    throw new Error(`DAILY_SUMMARY_DAYS inválido: "${value}" (use números de 0 a 6 separados por vírgula)`);
+  }
+  return new Set(days);
+}
+
 export function loadConfig() {
   const allowed = required("ALLOWED_NUMBERS")
     .split(",")
@@ -50,6 +67,13 @@ export function loadConfig() {
 
     ticktickMcpUrl: optional("TICKTICK_MCP_URL", "https://mcp.ticktick.com"),
     ticktickToken: required("TICKTICK_TOKEN"),
+
+    // Transcrição de áudio (opcional): sem a chave, áudios recebem um aviso.
+    groqApiKey: optional("GROQ_API_KEY", ""),
+
+    // Resumo automático (opcional): horário HH:MM e dias da semana (0=domingo ... 6=sábado).
+    dailySummaryTime: parseTime(optional("DAILY_SUMMARY_TIME", "")),
+    dailySummaryDays: parseDays(optional("DAILY_SUMMARY_DAYS", "0,1,2,3,4,5,6")),
 
     timezone: optional("TZ", "America/Sao_Paulo"),
     // Conversa recomeça do zero depois desse tempo sem mensagens (minutos).

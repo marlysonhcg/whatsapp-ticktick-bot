@@ -74,6 +74,16 @@ export class EvolutionClient {
     }
   }
 
+  /** Baixa a mídia (ex.: áudio) de uma mensagem recebida. */
+  async getMedia(messageId) {
+    const body = await this.#post(`/chat/getBase64FromMediaMessage/${this.instance}`, {
+      message: { key: { id: messageId } },
+      convertToMp4: false,
+    });
+    if (!body?.base64) throw new Error("A Evolution não devolveu o conteúdo do áudio.");
+    return { data: Buffer.from(body.base64, "base64"), mimetype: body.mimetype ?? "audio/ogg" };
+  }
+
   /** Mostra "digitando..." enquanto o Claude trabalha. Falhas aqui são ignoradas. */
   async typing(to) {
     try {

@@ -62,5 +62,18 @@ await step("Anthropic API", async () => {
   return `modelo ${model.id} disponível`;
 });
 
+if (config.groqApiKey) {
+  await step("Groq (áudio)", async () => {
+    const res = await fetch("https://api.groq.com/openai/v1/models", {
+      headers: { Authorization: `Bearer ${config.groqApiKey}` },
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status} (confira GROQ_API_KEY)`);
+    return "chave aceita";
+  });
+} else {
+  console.log("➖ Groq (áudio) - desligado, sem GROQ_API_KEY");
+}
+
 console.log(failures ? `\n${failures} verificação(ões) falharam.` : "\nTudo certo! Pode subir o bot.");
 process.exit(failures ? 1 : 0);

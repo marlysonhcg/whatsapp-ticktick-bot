@@ -94,14 +94,33 @@ Do seu WhatsApp pessoal, mande para o número do bot:
 - `conclui a tarefa comprar remédio`
 - `/novo` → começa uma conversa nova (o bot esquece o contexto anterior)
 
+## Funções extras
+
+### Mensagens de voz
+Com `GROQ_API_KEY` preenchida (crie em https://console.groq.com/keys, tem plano
+gratuito), o bot transcreve áudios e responde como se fosse texto. A resposta começa
+com 🎤 e o que ele entendeu, para você conferir. Sem a chave, ele avisa que só lê texto.
+
+### Resumo da manhã
+Com `DAILY_SUMMARY_TIME=07:00`, todo dia nesse horário o bot manda: tarefas de hoje,
+atrasadas (quantidade e as 3 mais importantes) e hábitos do dia. Você pode responder
+em cima do resumo ("reagenda as atrasadas pra hoje"). Para só dias úteis, use
+`DAILY_SUMMARY_DAYS=1,2,3,4,5`. Se o bot for reimplantado dentro de 1 hora depois do
+horário, o resumo pode chegar de novo.
+
+### Excluir tarefas (com confirmação)
+Peça "apaga a tarefa X". O bot mostra exatamente o que vai excluir e só apaga se você
+responder **SIM** (ou "confirmo", "pode apagar") em até 10 minutos. Qualquer outra
+resposta cancela. Quem executa a exclusão é o próprio bot, nunca o Claude, e só depois
+da sua confirmação. Projetos, listas, tags e comentários continuam sem poder ser
+apagados por aqui.
+
 ## Como funciona e limites
 
 - **Só responde aos números em `ALLOWED_NUMBERS`.** Mensagens de outros números e de
   grupos são ignoradas (aparecem no log como `[ignorado]`).
-- **Não apaga nada.** As ferramentas de exclusão do TickTick ficam desligadas; para
-  apagar, use o app.
 - Antes de alterar várias tarefas de uma vez, o bot pede confirmação.
-- Só texto: áudios recebem uma resposta avisando isso.
+- Imagens e figurinhas são ignoradas (a legenda de uma foto é lida como texto).
 - A memória da conversa fica na RAM e recomeça após 30 minutos parada, após 20 trocas
   ou quando o bot reinicia.
 - Modelo: `claude-sonnet-5-5` com esforço `medium`. Se o modelo recusar um pedido por
