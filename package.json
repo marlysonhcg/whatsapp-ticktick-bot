@@ -1,0 +1,19 @@
+{
+  "name": "whatsapp-ticktick-bot",
+  "version": "1.0.0",
+  "description": "Bot de WhatsApp (Evolution API) que usa o Claude para consultar e comandar o TickTick",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "ticktick-login": "node --env-file-if-exists=.env scripts/ticktick-login.js",
+    "setup-webhook": "node --env-file-if-exists=.env scripts/setup-webhook.js",
+    "check": "node --env-file-if-exists=.env scripts/check.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.13.0"
+  }
+}

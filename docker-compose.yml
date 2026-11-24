@@ -1,0 +1,19 @@
+services:
+  bot:
+    build: .
+    container_name: whatsapp-ticktick-bot
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    # Se a Evolution roda em Docker neste mesmo VPS, você pode colocar o bot na rede dela
+    # e usar http://bot:3000 como endereço do webhook (sem expor a porta 3000).
+    # Descubra o nome da rede com:  docker network ls
+    # Depois descomente as linhas abaixo e troque "evolution_default" pelo nome certo.
+    # networks:
+    #   - evolution
+#
+# networks:
+#   evolution:
+#     name: evolution_default
+#     external: true
