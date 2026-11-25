@@ -7,6 +7,7 @@ import { Assistant, friendlyError } from "./claude.js";
 import { transcribe } from "./transcribe.js";
 import { deleteTasks } from "./ticktick-mcp.js";
 import { startDailySummary } from "./scheduler.js";
+import { startReminders } from "./reminders.js";
 
 const config = loadConfig();
 const evolution = new EvolutionClient(config);
@@ -172,6 +173,16 @@ server.listen(config.port, () => {
       ? `Resumo diário: ${config.dailySummaryTime.label} (${config.timezone})`
       : "Resumo diário: desligado (sem DAILY_SUMMARY_TIME)",
   );
+  console.log(
+    config.reminderMinutes
+      ? `Lembretes: ${config.reminderMinutes} min antes de cada tarefa com horário`
+      : "Lembretes: desligados (REMINDER_MINUTES=0)",
+  );
+  startReminders(config, async (text) => {
+    for (const userKey of config.allowedNumbers) {
+      await evolution.sendText(userKey, text).catch((e) => console.error("[lembretes] envio falhou:", e?.message));
+    }
+  });
   // O resumo entra na mesma fila das mensagens do usuário, para não atropelar uma conversa.
   startDailySummary(config, (userKey, prompt) =>
     new Promise((resolve, reject) => enqueue(userKey, () => sendDailySummary(userKey, prompt).then(resolve, reject))),

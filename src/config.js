@@ -75,6 +75,9 @@ export function loadConfig() {
     dailySummaryTime: parseTime(optional("DAILY_SUMMARY_TIME", "")),
     dailySummaryDays: parseDays(optional("DAILY_SUMMARY_DAYS", "0,1,2,3,4,5,6")),
 
+    // Lembrete no WhatsApp X minutos antes de cada tarefa com horário (0 desliga).
+    reminderMinutes: Number(optional("REMINDER_MINUTES", "15")),
+
     timezone: optional("TZ", "America/Sao_Paulo"),
     // Conversa recomeça do zero depois desse tempo sem mensagens (minutos).
     idleResetMinutes: Number(optional("IDLE_RESET_MINUTES", "30")),

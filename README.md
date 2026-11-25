@@ -115,6 +115,13 @@ resposta cancela. Quem executa a exclusão é o próprio bot, nunca o Claude, e 
 da sua confirmação. Projetos, listas, tags e comentários continuam sem poder ser
 apagados por aqui.
 
+### Lembretes no WhatsApp
+Com `REMINDER_MINUTES=15` (padrão), o bot avisa 15 minutos antes de cada tarefa com
+horário do dia: "⏰ Em 15 min: *Nivup – IA* (13:00–19:00)". Ele lê as tarefas direto do
+TickTick (sem custo de IA) e também avisa dos blocos recorrentes que ficaram sem marcar
+nos dias anteriores. Use `REMINDER_MINUTES=0` para desligar. Hábitos não entram: eles
+já têm o lembrete do próprio TickTick.
+
 ## Como funciona e limites
 
 - **Só responde aos números em `ALLOWED_NUMBERS`.** Mensagens de outros números e de
